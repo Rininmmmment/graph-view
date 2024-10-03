@@ -9,7 +9,7 @@ import base64
 from flask_cors import CORS
 
 app = Flask(__name__)
-CORS(app, origins=["http://localhost:3000"])  # 許可するオリジンを指定
+CORS(app, origins=["http://localhost:3000", "https://graph-view-nq4y.vercel.app"])  # 許可するオリジンを指定
 
 @app.route('/api/view', methods=['POST'])
 def submit():
