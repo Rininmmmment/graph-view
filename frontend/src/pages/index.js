@@ -10,9 +10,11 @@ export default function Home() {
     const [weight, setWeight] = useState('unweighted');
     const [graphData, setGraphData] = useState('');
     const [graphUrl, setGraphUrl] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
 
     const handleSubmit = async (event) => {
         event.preventDefault();
+        setIsLoading(true);
         const response = await fetch(`${apiUrl}/api/view`, {
             method: 'POST',
             headers: {
@@ -22,6 +24,7 @@ export default function Home() {
         });
         const data = await response.json();
         setGraphUrl(data.graph_url);
+        setIsLoading(false);
     };
 
     return (
@@ -71,13 +74,13 @@ export default function Home() {
                         value={graphData}
                         onChange={(e) => setGraphData(e.target.value)}
                     />
-
                     <div>
                         <input className="submit-btn" type="submit" value="View" />
                     </div>
                 </form>
 
-                <div className='result-img'>
+                <div className='result'>
+                    {isLoading && <div className="spinner"></div>}
                     {graphUrl && <img src={`data:image/png;base64,${graphUrl}`} alt="Graph" />}
                 </div>
             </div>
