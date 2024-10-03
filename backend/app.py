@@ -6,21 +6,20 @@ import networkx as nx
 import matplotlib.pyplot as plt
 import io
 import base64
+from flask_cors import CORS
 
 app = Flask(__name__)
+CORS(app, origins=["http://localhost:3000"])  # 許可するオリジンを指定
 
-@app.route('/')
-def index():
-    return render_template('index.html')
-
-@app.route('/view', methods=['POST'])
+@app.route('/api/view', methods=['POST'])
 def submit():
     ERROR_MSG = '入力が不正です。'
 
     # 入力
-    direct = request.form['direct']
-    weight = request.form['weight']
-    graph_data = request.form['graph_data']
+    data = request.get_json()
+    direct = data['direct']
+    weight = data['weight']
+    graph_data = data['graph_data']
 
     try:
         if weight == 'unweighted':
@@ -59,11 +58,15 @@ def submit():
         plt.savefig(img, format='png')
         img.seek(0)
         graph_url = base64.b64encode(img.getvalue()).decode()
-
-        return render_template('index.html', graph_url=graph_url)
+        print(graph_url)
+        return {
+            'graph_url': graph_url
+        }
     
     except Exception as e:
-        return render_template('index.html', error=ERROR_MSG)
+        return {
+            'error': ERROR_MSG,
+        }
 
 if __name__ == '__main__':
     app.run(debug=True)
