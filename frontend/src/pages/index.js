@@ -1,82 +1,83 @@
-import Image from "next/image";
-import localFont from "next/font/local";
-
-const geistSans = localFont({
-    src: "./fonts/GeistVF.woff",
-    variable: "--font-geist-sans",
-    weight: "100 900",
-});
-const geistMono = localFont({
-    src: "./fonts/GeistMonoVF.woff",
-    variable: "--font-geist-mono",
-    weight: "100 900",
-});
+import { useState } from 'react';
 
 export default function Home() {
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+
+    const [direct, setDirect] = useState('undirected');
+    const [weight, setWeight] = useState('unweighted');
+    const [graphData, setGraphData] = useState('');
+    const [graphUrl, setGraphUrl] = useState('');
+
+    const handleSubmit = async (event) => {
+        event.preventDefault();
+        const response = await fetch(`${apiUrl}/api/view`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ "direct": direct, "weight": weight, "graph_data": graphData }),
+        });
+        const data = await response.json();
+        setGraphUrl(data.graph_url);
+    };
+
     return (
         <div>
-            <main>
-                <h1>Graph Viewer</h1>
-                {/* <p>{{ error }}</p> */}
-                <form action="/view" method="post">
-                    {/* 向きがあるか */}
-                    <label>
-                        <input type="radio" name="direct" value="undirected" checked /> 無向グラフ
-                    </label>
-                    <label>
-                        <input type="radio" name="direct" value="directed" /> 有向グラフ
-                    </label>
-                    <br /><br />
+            <h1>Graph Viewer</h1>
+            <form onSubmit={handleSubmit}>
+                <label>
+                    <input
+                        type="radio"
+                        name="direct"
+                        value="undirected"
+                        checked={direct === 'undirected'}
+                        onChange={() => setDirect('undirected')}
+                    /> 無向グラフ
+                </label>
+                <label>
+                    <input
+                        type="radio"
+                        name="direct"
+                        value="directed"
+                        checked={direct === 'directed'}
+                        onChange={() => setDirect('directed')}
+                    /> 有向グラフ
+                </label>
+                <br /><br />
 
-                    {/* 重みがあるか */}
-                    <label>
-                        <input type="radio" name="weight" value="unweighted" checked /> 重みなし
-                    </label>
-                    <label>
-                        <input type="radio" name="weight" value="weighted" /> 重みつき
-                    </label>
-                    <br /><br />
+                <label>
+                    <input
+                        type="radio"
+                        name="weight"
+                        value="unweighted"
+                        checked={weight === 'unweighted'}
+                        onChange={() => setWeight('unweighted')}
+                    /> 重みなし
+                </label>
+                <label>
+                    <input
+                        type="radio"
+                        name="weight"
+                        value="weighted"
+                        checked={weight === 'weighted'}
+                        onChange={() => setWeight('weighted')}
+                    /> 重みつき
+                </label>
+                <br /><br />
 
-                    {/* グラフのデータ */}
-                    <textarea name="graph_data" rows="10" cols="30"></textarea>
-                    <br />
+                <textarea
+                    name="graph_data"
+                    rows="10"
+                    cols="30"
+                    value={graphData}
+                    onChange={(e) => setGraphData(e.target.value)}
+                ></textarea>
+                <br />
 
-                    {/* 送信 */}
-                    <input type="submit" value="Submit" />
-                </form>
+                <input type="submit" value="Submit" />
+            </form>
 
-                <h2>入力例</h2>
-                <p>
-                    例1: 重みなし
-                    <br />
-                    1 2
-                    <br />
-                    2 3
-                    <br />
-                    3 4
-                    <br />
-                    4 1
-                </p>
-                <p>
-                    例2: 重みつき
-                    <br />
-                    1 2 3
-                    <br />
-                    2 3 4
-                    <br />
-                    3 4 5
-                    <br />
-                    4 1 6
-                </p>
-
-                {/* {% if graph_url %}
-                    <img src="data:image/png;base64,{{ graph_url }}" alt="Graph">
-                {% endif %} */}
-
-            </main>
-            <footer>
-
-            </footer>
+            {graphUrl && <img src={`data:image/png;base64,${graphUrl}`} alt="Graph" />}
         </div>
     );
 }
