@@ -11,6 +11,7 @@ export default function Home() {
     const [graphData, setGraphData] = useState('');
     const [graphUrl, setGraphUrl] = useState('');
     const [isLoading, setIsLoading] = useState(false);
+    const [error, setError] = useState('');
 
     const handleSubmit = async (event) => {
         event.preventDefault();
@@ -24,6 +25,7 @@ export default function Home() {
         });
         const data = await response.json();
         setGraphUrl(data.graph_url);
+        setError(data.error);
         setIsLoading(false);
     };
 
@@ -69,6 +71,7 @@ export default function Home() {
                         />
                     </div>
 
+                    {error && <div className="error">{error}</div>}
                     <Textarea
                         name="graph_data"
                         value={graphData}
