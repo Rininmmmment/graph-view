@@ -15,12 +15,12 @@
     ],
     "routes": [
         {
-            "src": "/static/(.*)",
-            "dest": "/frontend/build/static/$1"
+            "src": "/api/(.*)",
+            "dest": "backend/app.py"
         },
         {
             "src": "/(.*)",
-            "dest": "/backend/app.py"
+            "dest": "/frontend/.next/$1"
         }
     ]
 }
