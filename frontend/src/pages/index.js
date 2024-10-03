@@ -1,4 +1,7 @@
 import { useState } from 'react';
+import Title from './Title';
+import Radio from './Radio';
+import Textarea from './Textarea';
 
 export default function Home() {
     const apiUrl = process.env.NEXT_PUBLIC_API_URL;
@@ -23,61 +26,61 @@ export default function Home() {
 
     return (
         <div>
-            <h1>Graph Viewer</h1>
-            <form onSubmit={handleSubmit}>
-                <label>
-                    <input
-                        type="radio"
-                        name="direct"
-                        value="undirected"
-                        checked={direct === 'undirected'}
-                        onChange={() => setDirect('undirected')}
-                    /> 無向グラフ
-                </label>
-                <label>
-                    <input
-                        type="radio"
-                        name="direct"
-                        value="directed"
-                        checked={direct === 'directed'}
-                        onChange={() => setDirect('directed')}
-                    /> 有向グラフ
-                </label>
-                <br /><br />
+            <Title title="Graph Viewer" />
 
-                <label>
-                    <input
-                        type="radio"
-                        name="weight"
-                        value="unweighted"
-                        checked={weight === 'unweighted'}
-                        onChange={() => setWeight('unweighted')}
-                    /> 重みなし
-                </label>
-                <label>
-                    <input
-                        type="radio"
-                        name="weight"
-                        value="weighted"
-                        checked={weight === 'weighted'}
-                        onChange={() => setWeight('weighted')}
-                    /> 重みつき
-                </label>
-                <br /><br />
+            <div className='main'>
+                <form onSubmit={handleSubmit}>
+                    <h3>Direction</h3>
+                    <div className='radio-group'>
+                        <Radio
+                            name="direct"
+                            value="undirected"
+                            checked={direct === 'undirected'}
+                            onChange={() => setDirect('undirected')}
+                            label="undirected graph"
+                        />
+                        <Radio
+                            name="direct"
+                            value="directed"
+                            checked={direct === 'directed'}
+                            onChange={() => setDirect('directed')}
+                            label="directed graph"
+                        />
+                    </div>
 
-                <textarea
-                    name="graph_data"
-                    rows="10"
-                    cols="30"
-                    value={graphData}
-                    onChange={(e) => setGraphData(e.target.value)}
-                ></textarea>
-                <br />
+                    <h3>Weight</h3>
+                    <div className='radio-group'>
+                        <Radio
+                            name="weight"
+                            value="unweighted"
+                            checked={weight === 'unweighted'}
+                            onChange={() => setWeight('unweighted')}
+                            label="unweighted"
+                        />
+                        <Radio
+                            name="weight"
+                            value="weighted"
+                            checked={weight === 'weighted'}
+                            onChange={() => setWeight('weighted')}
+                            label="weighted"
+                        />
+                    </div>
 
-                <input type="submit" value="Submit" />
-            </form>
+                    <Textarea
+                        name="graph_data"
+                        value={graphData}
+                        onChange={(e) => setGraphData(e.target.value)}
+                    />
 
-            {graphUrl && <img src={`data:image/png;base64,${graphUrl}`} alt="Graph" />}
+                    <div>
+                        <input className="submit-btn" type="submit" value="View" />
+                    </div>
+                </form>
+
+                <div className='result-img'>
+                    {graphUrl && <img src={`data:image/png;base64,${graphUrl}`} alt="Graph" />}
+                </div>
+            </div>
         </div>
     );
 }
