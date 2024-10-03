@@ -84,7 +84,7 @@ export default function Home() {
 
                 <div className='result'>
                     {isLoading && <div className="spinner"></div>}
-                    {graphUrl && <img src={`data:image/png;base64,${graphUrl}`} alt="Graph" />}
+                    {!isLoading && <img src={`data:image/png;base64,${graphUrl}`} alt="Graph" />}
                 </div>
             </div>
         </div>
