@@ -58,7 +58,6 @@ def submit():
         plt.savefig(img, format='png')
         img.seek(0)
         graph_url = base64.b64encode(img.getvalue()).decode()
-        print(graph_url)
         return {
             'graph_url': graph_url
         }
