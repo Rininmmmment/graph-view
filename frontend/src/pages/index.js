@@ -15,6 +15,11 @@ export default function Home() {
 
     const handleSubmit = async (event) => {
         event.preventDefault();
+        setError('');
+        if (!isGraphDataValid(graphData)) {
+            return;
+        }
+
         setIsLoading(true);
         const response = await fetch(`${apiUrl}/api/view`, {
             method: 'POST',
@@ -28,6 +33,21 @@ export default function Home() {
         setError(data.error);
         setIsLoading(false);
     };
+
+    const isGraphDataValid = (graphData) => {
+        if (graphData === '') {
+            setError('Graph data is required');
+            return false;
+        } else if (weight === 'unweighted' && graphData.split('\n').some(line => line.split(' ').length !== 2)) {
+            setError('Invalid graph data');
+            return false;
+        } else if (weight === 'weighted' && graphData.split('\n').some(line => line.split(' ').length !== 3)) {
+            setError('Invalid graph data');
+            return false;
+        } else {
+            return true;
+        }
+    }
 
     return (
         <div>

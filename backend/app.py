@@ -13,7 +13,7 @@ CORS(app, origins=["http://localhost:3000", "https://graph-view-nq4y.vercel.app"
 
 @app.route('/api/view', methods=['POST'])
 def submit():
-    ERROR_MSG = 'An error occurred. Please check the input data.'
+    ERROR_MSG = 'An error occurred.'
 
     # 入力
     data = request.get_json()
