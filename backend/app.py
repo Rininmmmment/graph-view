@@ -1,7 +1,7 @@
 import matplotlib
 matplotlib.use('Agg')
 
-from flask import Flask, render_template, request
+from flask import Flask, request, jsonify
 import networkx as nx
 import matplotlib.pyplot as plt
 import io
@@ -48,13 +48,18 @@ def submit():
         # グラフを描画して画像として保存
         plt.clf()
         img = io.BytesIO()
-        pos = nx.spring_layout(G)
+        if direct == 'directed':
+            pos = nx.circular_layout(G)
+        else:
+            pos = nx.spring_layout(G)
+            
         if weight == 'weighted':
             weights = nx.get_edge_attributes(G, 'weight')
-            nx.draw(G, pos, with_labels=True, node_color='skyblue')
+            nx.draw(G, pos, with_labels=True, node_color='skyblue', alpha=0.7)
             nx.draw_networkx_edge_labels(G, pos, edge_labels=weights)
         else:
             nx.draw(G, pos, with_labels=True, node_color='skyblue')
+            
         plt.savefig(img, format='png')
         img.seek(0)
         graph_url = base64.b64encode(img.getvalue()).decode()
