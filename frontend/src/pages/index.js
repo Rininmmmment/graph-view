@@ -5,7 +5,7 @@ import Textarea from './Textarea';
 
 export default function Home() {
     const apiUrl = process.env.NEXT_PUBLIC_API_URL;
-
+    const [invalidCount, setInvalidCount] = useState(0);
     const [direct, setDirect] = useState('undirected');
     const [weight, setWeight] = useState('unweighted');
     const [graphData, setGraphData] = useState('');
@@ -36,13 +36,28 @@ export default function Home() {
 
     const isGraphDataValid = (graphData) => {
         if (graphData === '') {
-            setError('Graph data is required 😔');
+            setInvalidCount(prevCount => prevCount + 1);
+            if (invalidCount > 4) {
+                setError('Graph data is required 😡💢');
+            } else {
+                setError('Graph data is required 😔');
+            }
             return false;
         } else if (weight === 'unweighted' && graphData.split('\n').some(line => line.split(' ').length !== 2)) {
-            setError('Invalid graph data 🥺💧');
+            setInvalidCount(prevCount => prevCount + 1);
+            if (invalidCount > 4) {
+                setError('Invalid graph data 😡💢');
+            } else {
+                setError('Invalid graph data 🥺💧');
+            }
             return false;
         } else if (weight === 'weighted' && graphData.split('\n').some(line => line.split(' ').length !== 3)) {
-            setError('Invalid graph data 🥺💧');
+            setInvalidCount(prevCount => prevCount + 1);
+            if (invalidCount > 4) {
+                setError('Invalid graph data 😡💢');
+            } else {
+                setError('Invalid graph data 🥺💧');
+            }
             return false;
         } else {
             return true;
