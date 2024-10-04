@@ -36,13 +36,13 @@ export default function Home() {
 
     const isGraphDataValid = (graphData) => {
         if (graphData === '') {
-            setError('Graph data is required');
+            setError('Graph data is required 😔');
             return false;
         } else if (weight === 'unweighted' && graphData.split('\n').some(line => line.split(' ').length !== 2)) {
-            setError('Invalid graph data');
+            setError('Invalid graph data 🥺💧');
             return false;
         } else if (weight === 'weighted' && graphData.split('\n').some(line => line.split(' ').length !== 3)) {
-            setError('Invalid graph data');
+            setError('Invalid graph data 🥺💧');
             return false;
         } else {
             return true;
